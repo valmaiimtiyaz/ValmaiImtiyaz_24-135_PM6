@@ -176,9 +176,6 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  // ==========================================
-  // FUNGSI POP-UP: Edit Profil (Dengan StatefulBuilder)
-  // ==========================================
   void _showEditProfileSheet(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     final nameController = TextEditingController(text: userProvider.name);
@@ -192,8 +189,6 @@ class ProfileScreen extends StatelessWidget {
       backgroundColor: Colors.transparent,
       builder: (context) {
         final isDark = Theme.of(context).brightness == Brightness.dark;
-
-        // ---> MENGGUNAKAN STATEFULBUILDER AGAR POPUP BISA ME-REFRESH DIRINYA SENDIRI
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setModalState) {
             return Container(
@@ -224,7 +219,6 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
 
-                  // ---> AREA FOTO
                   Center(
                     child: Stack(
                       children: [
@@ -256,14 +250,11 @@ class ProfileScreen extends StatelessWidget {
                                 );
 
                                 if (image != null) {
-                                  // Update provider (untuk layar di belakangnya)
                                   userProvider.updateProfileImage(image.path);
 
-                                  // ---> PAKSA REFRESH TAMPILAN POP-UP INI
                                   setModalState(() {});
                                 }
                               } catch (e) {
-                                // Tampilkan pesan jika ditolak/error
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text('Gagal membuka galeri: $e'),
