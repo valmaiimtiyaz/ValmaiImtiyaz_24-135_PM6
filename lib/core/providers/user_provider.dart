@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 class UserProvider extends ChangeNotifier {
-  String _name = 'User AsahAsik';
-  String _username = '@user_asah_asik';
+  String _name = 'user';
+  String _username = '@user';
   String? _profileImagePath;
   String get name => _name;
   String get username => _username;
