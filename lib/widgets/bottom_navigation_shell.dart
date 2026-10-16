@@ -21,35 +21,49 @@ class BottomNavigationShell extends StatelessWidget {
 
     return Scaffold(
       body: navigationShell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: navigationShell.currentIndex,
-        onDestinationSelected: (index) => _onTap(context, index),
-        backgroundColor: isDark ? AppColors.coffeeBean : AppColors.champagne,
-        indicatorColor: AppColors.blazeOrange.withOpacity(0.2),
-        destinations: [
-          NavigationDestination(
-            icon: Icon(
-              Icons.home_outlined,
-              color: isDark ? AppColors.champagne : AppColors.lightNavyBlue,
+
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: isDark
+                  ? AppColors.champagne.withOpacity(0.2)
+                  : AppColors.lightNavyBlue.withOpacity(0.2),
+              width: 1.0,
             ),
-            selectedIcon: const Icon(
-              Icons.home_rounded,
-              color: AppColors.blazeOrange,
-            ),
-            label: 'Beranda',
           ),
-          NavigationDestination(
-            icon: Icon(
-              Icons.person_outline_rounded,
-              color: isDark ? AppColors.champagne : AppColors.lightNavyBlue,
+        ),
+
+        child: NavigationBar(
+          selectedIndex: navigationShell.currentIndex,
+          onDestinationSelected: (index) => _onTap(context, index),
+          backgroundColor: isDark ? AppColors.coffeeBean : AppColors.champagne,
+          indicatorColor: AppColors.blazeOrange.withOpacity(0.2),
+          destinations: [
+            NavigationDestination(
+              icon: Icon(
+                Icons.home_outlined,
+                color: isDark ? AppColors.champagne : AppColors.lightNavyBlue,
+              ),
+              selectedIcon: const Icon(
+                Icons.home_rounded,
+                color: AppColors.blazeOrange,
+              ),
+              label: 'Beranda',
             ),
-            selectedIcon: const Icon(
-              Icons.person_rounded,
-              color: AppColors.blazeOrange,
+            NavigationDestination(
+              icon: Icon(
+                Icons.person_outline_rounded,
+                color: isDark ? AppColors.champagne : AppColors.lightNavyBlue,
+              ),
+              selectedIcon: const Icon(
+                Icons.person_rounded,
+                color: AppColors.blazeOrange,
+              ),
+              label: 'Profil',
             ),
-            label: 'Profil',
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
