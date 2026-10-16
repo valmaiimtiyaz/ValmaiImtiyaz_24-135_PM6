@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../screens/auth/sign_in_screen.dart';
 import '../../screens/auth/sign_up_screen.dart';
+import '../../widgets/bottom_navigation_shell.dart';
 
 class AppRoutes {
   static const String signIn = '/';
@@ -13,8 +14,11 @@ class AppRoutes {
   static const String result = '/result';
 }
 
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+
 class AppRouter {
   static final GoRouter router = GoRouter(
+    navigatorKey: _rootNavigatorKey,
     initialLocation: AppRoutes.signIn,
     routes: [
       GoRoute(
@@ -25,23 +29,44 @@ class AppRouter {
         path: AppRoutes.signUp,
         builder: (context, state) => const SignUpScreen(),
       ),
-      GoRoute(
-        path: AppRoutes.home,
-        builder: (context, state) =>
-            const Scaffold(body: Center(child: Text('Halaman Home'))),
-      ),
-      GoRoute(
-        path: AppRoutes.profile,
-        builder: (context, state) =>
-            const Scaffold(body: Center(child: Text('Halaman Profil'))),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return BottomNavigationShell(navigationShell: navigationShell);
+        },
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.home,
+                builder: (context, state) => const Scaffold(
+                  body: Center(
+                    child: Text('Halaman Beranda Asli Segera Hadir'),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: AppRoutes.profile,
+                builder: (context, state) => const Scaffold(
+                  body: Center(child: Text('Halaman Profil Segera Hadir')),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
       GoRoute(
         path: AppRoutes.quiz,
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) =>
             const Scaffold(body: Center(child: Text('Halaman Kuis'))),
       ),
       GoRoute(
         path: AppRoutes.result,
+        parentNavigatorKey: _rootNavigatorKey,
         builder: (context, state) =>
             const Scaffold(body: Center(child: Text('Halaman Hasil'))),
       ),
