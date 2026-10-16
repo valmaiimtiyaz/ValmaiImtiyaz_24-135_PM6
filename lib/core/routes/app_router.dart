@@ -5,6 +5,7 @@ import '../../screens/auth/sign_in_screen.dart';
 import '../../screens/auth/sign_up_screen.dart';
 import '../../widgets/bottom_navigation_shell.dart';
 import '../../screens/home/home_screen.dart';
+import '../../screens/profile/profile_screen.dart';
 
 class AppRoutes {
   static const String signIn = '/';
@@ -47,9 +48,7 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: AppRoutes.profile,
-                builder: (context, state) => const Scaffold(
-                  body: Center(child: Text('Halaman Profil Segera Hadir')),
-                ),
+                builder: (context, state) => const ProfileScreen(),
               ),
             ],
           ),
