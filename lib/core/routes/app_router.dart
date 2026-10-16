@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../screens/auth/sign_in_screen.dart';
+
 class AppRoutes {
   static const String signIn = '/';
   static const String signUp = '/sign-up';
@@ -16,8 +18,7 @@ class AppRouter {
     routes: [
       GoRoute(
         path: AppRoutes.signIn,
-        builder: (context, state) =>
-            const Scaffold(body: Center(child: Text('Halaman Sign In'))),
+        builder: (context, state) => const SignInScreen(),
       ),
       GoRoute(
         path: AppRoutes.signUp,
