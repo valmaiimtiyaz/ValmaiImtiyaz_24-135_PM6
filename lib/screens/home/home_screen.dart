@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../../core/routes/app_router.dart';
+import '../../core/providers/user_provider.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -11,6 +15,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final textTheme = Theme.of(context).textTheme;
+    final userProvider = Provider.of<UserProvider>(context);
 
     return Scaffold(
       body: SafeArea(
@@ -27,7 +32,7 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Halo, User! 👋',
+                          'Halo, ${userProvider.name}! 👋',
                           style: textTheme.headlineMedium?.copyWith(
                             fontWeight: FontWeight.w800,
                             color: isDark
@@ -64,11 +69,16 @@ class HomeScreen extends StatelessWidget {
                       backgroundColor: isDark
                           ? AppColors.champagne.withOpacity(0.2)
                           : Colors.white.withOpacity(0.5),
-                      child: const Icon(
-                        Icons.person_rounded,
-                        color: AppColors.coffeeBean,
-                        size: 30,
-                      ),
+                      backgroundImage: userProvider.profileImagePath != null
+                          ? FileImage(File(userProvider.profileImagePath!))
+                          : null,
+                      child: userProvider.profileImagePath == null
+                          ? const Icon(
+                              Icons.person_rounded,
+                              color: AppColors.coffeeBean,
+                              size: 30,
+                            )
+                          : null,
                     ),
                   ),
                 ],
