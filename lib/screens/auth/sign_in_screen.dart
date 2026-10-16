@@ -54,7 +54,6 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
-
                 Text(
                   'Halo,\nSelamat Datang!',
                   style: textTheme.displayLarge?.copyWith(
@@ -63,17 +62,20 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
+
                 Text(
                   'Masuk ke akun AsahAsik Kamu\nuntuk memulai quiz.',
                   style: textTheme.bodyLarge?.copyWith(height: 1.4),
                 ),
                 SizedBox(height: size.height * 0.05),
+
                 CustomTextField(
                   hintText: 'Nama Pengguna',
                   icon: Icons.alternate_email_rounded,
                   controller: _usernameController,
                 ),
                 const SizedBox(height: 20),
+
                 CustomTextField(
                   hintText: 'Kata Sandi',
                   icon: Icons.lock_outline_rounded,
@@ -81,6 +83,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   controller: _passwordController,
                 ),
                 const SizedBox(height: 12),
+
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -103,6 +106,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   },
                 ),
                 const SizedBox(height: 24),
+
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

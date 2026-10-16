@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../screens/auth/sign_in_screen.dart';
+import '../../screens/auth/sign_up_screen.dart';
 
 class AppRoutes {
   static const String signIn = '/';
@@ -22,8 +23,7 @@ class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.signUp,
-        builder: (context, state) =>
-            const Scaffold(body: Center(child: Text('Halaman Sign Up'))),
+        builder: (context, state) => const SignUpScreen(),
       ),
       GoRoute(
         path: AppRoutes.home,
