@@ -29,7 +29,7 @@ pengguna, lengkap dengan pembahasan tiap soal.
   lebarnya di tablet/web, layout kuis berubah menjadi dua kolom di landscape.
 
 ### Dokumentasi
-* Font Typography: [Inter by Google Fonts](https://fonts.google.com/specimen/Inter) (Regular, SemiBold, Bold)
+* Font Typography: [Inter by Google Fonts](https://fonts.google.com/specimen/Inter) (Regular, Medium, SemiBold, Bold, ExtraBold, Italic)
 * Sumber Soal: Wikipedia, beberapa pertanyaan di modifikasi dari referensi (GauthMath, Scribd), SOALCAT, testbook 
 * Icons: Material Icons bawaan Flutter.
 
