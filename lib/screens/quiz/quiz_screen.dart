@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../../core/data/quiz_data.dart';
 import '../../core/routes/app_router.dart';
+import '../../core/providers/user_provider.dart';
 
 class QuizScreen extends StatefulWidget {
   final String category;
@@ -39,6 +41,9 @@ class _QuizScreenState extends State<QuizScreen> {
           finalScore += 20;
         }
       }
+
+      Provider.of<UserProvider>(context, listen: false).addScore(finalScore);
+
       context.pushReplacement(
         AppRoutes.result,
         extra: {

@@ -85,7 +85,7 @@ class ProfileScreen extends StatelessWidget {
                   Expanded(
                     child: _buildStatCard(
                       title: 'Total Skor',
-                      value: '1,250',
+                      value: '${userProvider.totalScore}',
                       icon: Icons.star_rounded,
                       isDark: isDark,
                       textTheme: textTheme,

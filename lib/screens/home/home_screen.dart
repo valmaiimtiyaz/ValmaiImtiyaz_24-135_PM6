@@ -118,7 +118,7 @@ class HomeScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Skor Tertinggi',
+                            'Total Skor',
                             style: textTheme.titleMedium?.copyWith(
                               color: AppColors.champagne.withOpacity(0.9),
                               fontWeight: FontWeight.w600,
@@ -126,12 +126,12 @@ class HomeScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            '1,250',
+                            '${userProvider.totalScore}',
                             style: textTheme.displayLarge?.copyWith(
                               color: AppColors.champagne,
                               fontSize: 40,
                               fontWeight: FontWeight.w900,
-                              height: 1.0,
+                              height: 1.1,
                             ),
                           ),
                         ],
