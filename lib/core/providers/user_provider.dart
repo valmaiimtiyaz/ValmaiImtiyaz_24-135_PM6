@@ -14,6 +14,7 @@ class UserProvider extends ChangeNotifier {
   String get displayName => _name.trim().isEmpty ? 'Teman' : _name.trim();
   String get username => _username;
   String get handle => _username.isEmpty ? '@pengguna' : '@$_username';
+  bool get hasAccount => _hasAccount;
   String? get profileImagePath => _profileImagePath;
   int get completedQuizzes => _completedQuizzes;
   int get totalScore => _bestScores.values.fold(0, (sum, s) => sum + s);
@@ -31,12 +32,8 @@ class UserProvider extends ChangeNotifier {
   }
 
   bool signIn(String username, String password) {
-    if (_hasAccount) {
-      return username.trim() == _username && password == _password;
-    }
-    _username = username.trim();
-    notifyListeners();
-    return true;
+    if (!_hasAccount) return false;
+    return username.trim() == _username && password == _password;
   }
 
   void updateName(String newName) {

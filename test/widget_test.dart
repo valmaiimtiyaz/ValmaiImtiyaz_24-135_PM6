@@ -55,5 +55,21 @@ void main() {
       expect(user.totalScore, 80);
       expect(user.completedQuizzes, 3);
     });
+
+    test('sign in ditolak jika belum ada akun terdaftar', () {
+      final user = UserProvider();
+
+      expect(user.hasAccount, isFalse);
+      expect(user.signIn('mai', 'rahasia123'), isFalse);
+    });
+
+    test('sign in berhasil hanya dengan username dan sandi yang benar', () {
+      final user = UserProvider()
+        ..register(name: 'Mai', username: 'mai', password: 'rahasia123');
+
+      expect(user.signIn('mai', 'rahasia123'), isTrue);
+      expect(user.signIn('mai', 'salah'), isFalse);
+      expect(user.signIn('orang_lain', 'rahasia123'), isFalse);
+    });
   });
 }
