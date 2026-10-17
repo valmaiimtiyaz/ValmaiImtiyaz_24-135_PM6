@@ -1,17 +1,22 @@
-# asah_asik
+# AsahAsik
 
-A new Flutter project.
+Aplikasi kuis pilihan ganda berbasis Flutter. Pengguna memasukkan nama, menjawab
+serangkaian pertanyaan, lalu melihat skor akhir atas namanya.
 
-## Getting Started
+## Identitas Mahasiswa
 
-This project is a starting point for a Flutter application.
+Nama : Valmai Imtiyaz
+Nim : 241401135
+Lab : Pemrograman Mobile 6
 
-A few resources to get you started if this is your first Flutter project:
+## Informasi Aplikasi
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+**Nama aplikasi:** AsahAsik
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+**Deskripsi singkat:** AsahAsik adalah aplikasi kuis pilihan ganda dengan tiga
+kategori (Pengetahuan Umum, Logika & Analisis, Tebak Pola). Data soal bersifat
+lokal (tanpa database). Skor dihitung otomatis dan ditampilkan bersama nama
+pengguna, lengkap dengan pembahasan tiap soal.
+
+### Mockup / Prototype
+
