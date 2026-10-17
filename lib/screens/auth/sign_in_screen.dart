@@ -39,7 +39,15 @@ class _SignInScreenState extends State<SignInScreen> {
     });
     if (_usernameError != null || _passwordError != null) return;
 
-    final success = context.read<UserProvider>().signIn(username, password);
+    final user = context.read<UserProvider>();
+    if (!user.hasAccount) {
+      setState(
+        () => _usernameError = 'Akun belum terdaftar. Silakan buat akun dulu.',
+      );
+      return;
+    }
+
+    final success = user.signIn(username, password);
     if (success) {
       context.go(AppRoutes.home);
     } else {
@@ -61,17 +69,10 @@ class _SignInScreenState extends State<SignInScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
-                  padding: r.all(12),
-                  decoration: BoxDecoration(
-                    color: AppColors.lightNavyBlue.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.waving_hand_rounded,
-                    size: r.s(32),
-                    color: AppColors.lightNavyBlue,
-                  ),
+                Image.asset(
+                  'assets/images/logo.png',
+                  width: r.s(72),
+                  height: r.s(72),
                 ),
                 SizedBox(height: r.s(24)),
                 Text(

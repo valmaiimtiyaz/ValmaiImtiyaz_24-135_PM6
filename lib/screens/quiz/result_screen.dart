@@ -28,13 +28,14 @@ class ResultScreen extends StatelessWidget {
 
   void _showReview(BuildContext context, QuizResult result) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final sheetRadius = Responsive.of(context).s(32);
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: isDark ? AppColors.coffeeBean : AppColors.champagne,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(32)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(sheetRadius)),
       ),
       builder: (sheetContext) {
         final r = Responsive.of(sheetContext);
@@ -57,7 +58,7 @@ class ResultScreen extends StatelessWidget {
                         color: isDark
                             ? AppColors.champagne.withValues(alpha: 0.3)
                             : AppColors.coffeeBean.withValues(alpha: 0.2),
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(r.s(10)),
                       ),
                     ),
                   ),
@@ -130,10 +131,10 @@ class ResultScreen extends StatelessWidget {
                         color: AppColors.blazeOrange.withValues(alpha: 0.15),
                         shape: BoxShape.circle,
                       ),
-                      child: Icon(
-                        Icons.emoji_events_rounded,
-                        size: r.s(88),
-                        color: AppColors.blazeOrange,
+                      child: Image.asset(
+                        'assets/images/trophy.png',
+                        width: r.s(88),
+                        height: r.s(88),
                       ),
                     ),
                     SizedBox(height: r.s(24)),
