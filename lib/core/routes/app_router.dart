@@ -6,6 +6,7 @@ import '../../screens/auth/sign_up_screen.dart';
 import '../../widgets/bottom_navigation_shell.dart';
 import '../../screens/home/home_screen.dart';
 import '../../screens/profile/profile_screen.dart';
+import '../../screens/quiz/quiz_screen.dart';
 
 class AppRoutes {
   static const String signIn = '/';
@@ -31,6 +32,7 @@ class AppRouter {
         path: AppRoutes.signUp,
         builder: (context, state) => const SignUpScreen(),
       ),
+
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return BottomNavigationShell(navigationShell: navigationShell);
@@ -57,8 +59,10 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.quiz,
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) =>
-            const Scaffold(body: Center(child: Text('Halaman Kuis'))),
+        builder: (context, state) {
+          final category = state.extra as String? ?? 'Pengetahuan Umum';
+          return QuizScreen(category: category);
+        },
       ),
       GoRoute(
         path: AppRoutes.result,

@@ -52,7 +52,6 @@ class HomeScreen extends StatelessWidget {
                       ],
                     ),
                   ),
-
                   Container(
                     padding: const EdgeInsets.all(2),
                     decoration: BoxDecoration(
@@ -188,7 +187,7 @@ class HomeScreen extends StatelessWidget {
   }) {
     return InkWell(
       onTap: () {
-        context.push(AppRoutes.quiz);
+        context.push(AppRoutes.quiz, extra: title);
       },
       borderRadius: BorderRadius.circular(20),
       child: Container(
@@ -197,13 +196,11 @@ class HomeScreen extends StatelessWidget {
           color: isDark
               ? Colors.white.withOpacity(0.05)
               : Colors.white.withOpacity(0.5),
-
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isDark ? Colors.transparent : Colors.white,
             width: 1.5,
           ),
-
           boxShadow: [
             BoxShadow(
               color: AppColors.coffeeBean.withOpacity(0.03),
