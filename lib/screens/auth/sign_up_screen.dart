@@ -68,7 +68,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
         content: const Text('Akun berhasil dibuat! Silakan masuk.'),
         backgroundColor: AppColors.blazeOrange,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Responsive.of(context).s(10)),
+        ),
       ),
     );
     context.pop();

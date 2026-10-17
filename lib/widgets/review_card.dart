@@ -41,7 +41,7 @@ class ReviewCard extends StatelessWidget {
           color: isCorrect
               ? correctColor.withValues(alpha: 0.5)
               : wrongColor.withValues(alpha: 0.3),
-          width: 1.5,
+          width: r.s(1.5),
         ),
       ),
       child: Column(

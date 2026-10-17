@@ -89,7 +89,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           borderRadius: radius,
           borderSide: BorderSide(
             color: isDark ? AppColors.champagne : AppColors.blazeOrange,
-            width: 1.5,
+            width: r.s(1.5),
           ),
         ),
         errorBorder: OutlineInputBorder(
@@ -98,7 +98,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderRadius: radius,
-          borderSide: const BorderSide(color: Colors.redAccent, width: 1.5),
+          borderSide: BorderSide(color: Colors.redAccent, width: r.s(1.5)),
         ),
         contentPadding: EdgeInsets.symmetric(
           vertical: r.s(18),

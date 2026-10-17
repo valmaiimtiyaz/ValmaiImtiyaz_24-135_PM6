@@ -63,7 +63,7 @@ class CustomButton extends StatelessWidget {
             disabledForegroundColor: Colors.grey,
             side: BorderSide(
               color: enabled ? color : Colors.transparent,
-              width: 1.5,
+              width: r.s(1.5),
             ),
             shape: shape,
           ),

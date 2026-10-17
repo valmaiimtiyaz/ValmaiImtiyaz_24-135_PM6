@@ -59,6 +59,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
 
   void _save() {
     final messenger = ScaffoldMessenger.of(context);
+    final snackRadius = Responsive.of(context).s(10);
     context.read<UserProvider>().updateProfile(
       _nameController.text,
       _usernameController.text.replaceAll('@', ''),
@@ -69,7 +70,9 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
         content: const Text('Profil berhasil diperbarui!'),
         backgroundColor: AppColors.blazeOrange,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(snackRadius),
+        ),
       ),
     );
   }
@@ -122,7 +125,7 @@ class _EditProfileSheetState extends State<EditProfileSheet> {
                           color: isDark
                               ? AppColors.coffeeBean
                               : AppColors.champagne,
-                          width: 2.5,
+                          width: r.s(2.5),
                         ),
                       ),
                       child: Icon(

@@ -55,8 +55,6 @@ class ProfileScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: r.s(32)),
-
-              // PERBAIKAN: Dibungkus dengan IntrinsicHeight untuk mencegah "forces an infinite height"
               IntrinsicHeight(
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -131,7 +129,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                   style: OutlinedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: r.s(16)),
-                    side: const BorderSide(color: Colors.redAccent, width: 1.5),
+                    side: BorderSide(color: Colors.redAccent, width: r.s(1.5)),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(r.s(16)),
                     ),

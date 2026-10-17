@@ -54,7 +54,7 @@ class UserAvatar extends StatelessWidget {
       padding: EdgeInsets.all(r.s(ringGap)),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: ringColor!, width: ringWidth),
+        border: Border.all(color: ringColor!, width: r.s(ringWidth)),
       ),
       child: avatar,
     );

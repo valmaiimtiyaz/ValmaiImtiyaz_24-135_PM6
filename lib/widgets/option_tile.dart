@@ -35,7 +35,7 @@ class OptionTile extends StatelessWidget {
           borderRadius: borderRadius,
           border: Border.all(
             color: isSelected ? AppColors.blazeOrange : Colors.transparent,
-            width: 2,
+            width: r.s(2),
           ),
         ),
         child: Material(
