@@ -38,7 +38,7 @@ pengguna, lengkap dengan pembahasan tiap soal.
 
 ### Screenshot Aplikasi
 
-| Sign In & Sign Up | Home Screen (Light) | Home Screen (Dark) |
+| Sign In & Sign Up | Home Screen | Home Screen |
 | :---: | :---: | :---: |
 | ![Sign In](docs/screenshots/SignIn.png)<br>![Sign Up](docs/screenshots/SignUp.png) | ![Home](docs/screenshots/Home.png) | ![Home Dark](docs/screenshots/Home(1).png) |
 
