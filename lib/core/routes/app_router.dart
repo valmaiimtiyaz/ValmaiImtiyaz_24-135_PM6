@@ -7,6 +7,7 @@ import '../../widgets/bottom_navigation_shell.dart';
 import '../../screens/home/home_screen.dart';
 import '../../screens/profile/profile_screen.dart';
 import '../../screens/quiz/quiz_screen.dart';
+import '../../screens/quiz/result_screen.dart';
 
 class AppRoutes {
   static const String signIn = '/';
@@ -67,8 +68,21 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.result,
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) =>
-            const Scaffold(body: Center(child: Text('Halaman Hasil'))),
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>? ?? {};
+          final category = extra['category'] as String? ?? 'Kuis';
+          final score = extra['score'] as int? ?? 0;
+          final userAnswers = extra['userAnswers'] as Map<int, int>? ?? {};
+          final questions =
+              extra['questions'] as List<Map<String, dynamic>>? ?? [];
+
+          return ResultScreen(
+            category: category,
+            score: score,
+            userAnswers: userAnswers,
+            questions: questions,
+          );
+        },
       ),
     ],
   );

@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../core/constants/app_colors.dart';
 import '../../core/data/quiz_data.dart';
+import '../../core/routes/app_router.dart';
 
 class QuizScreen extends StatefulWidget {
   final String category;
@@ -16,7 +17,6 @@ class QuizScreen extends StatefulWidget {
 class _QuizScreenState extends State<QuizScreen> {
   int currentQuestionIndex = 0;
   Map<int, int> userAnswers = {};
-
   List<Map<String, dynamic>> questions = [];
 
   @override
@@ -39,14 +39,15 @@ class _QuizScreenState extends State<QuizScreen> {
           finalScore += 20;
         }
       }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Kuis Selesai! Skor Akhir: $finalScore/100'),
-          backgroundColor: AppColors.blazeOrange,
-        ),
+      context.pushReplacement(
+        AppRoutes.result,
+        extra: {
+          'category': widget.category,
+          'score': finalScore,
+          'userAnswers': userAnswers,
+          'questions': questions,
+        },
       );
-      context.pop();
     }
   }
 
@@ -87,7 +88,7 @@ class _QuizScreenState extends State<QuizScreen> {
                     ),
                   ),
                   Text(
-                    ' ${currentQuestionIndex + 1} / $totalQuestions',
+                    '${currentQuestionIndex + 1} / $totalQuestions',
                     style: textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: isDark
@@ -158,7 +159,6 @@ class _QuizScreenState extends State<QuizScreen> {
                   itemBuilder: (context, index) {
                     final isSelected =
                         userAnswers[currentQuestionIndex] == index;
-
                     final optionText = currentQuestionData['options'][index];
                     final letter = optionLetters[index];
 
