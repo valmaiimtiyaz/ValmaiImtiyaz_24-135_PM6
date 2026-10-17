@@ -60,29 +60,12 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.quiz,
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) {
-          final category = state.extra as String? ?? 'Pengetahuan Umum';
-          return QuizScreen(category: category);
-        },
+        builder: (context, state) => const QuizScreen(),
       ),
       GoRoute(
         path: AppRoutes.result,
         parentNavigatorKey: _rootNavigatorKey,
-        builder: (context, state) {
-          final extra = state.extra as Map<String, dynamic>? ?? {};
-          final category = extra['category'] as String? ?? 'Kuis';
-          final score = extra['score'] as int? ?? 0;
-          final userAnswers = extra['userAnswers'] as Map<int, int>? ?? {};
-          final questions =
-              extra['questions'] as List<Map<String, dynamic>>? ?? [];
-
-          return ResultScreen(
-            category: category,
-            score: score,
-            userAnswers: userAnswers,
-            questions: questions,
-          );
-        },
+        builder: (context, state) => const ResultScreen(),
       ),
     ],
   );

@@ -1,26 +1,49 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/constants/app_colors.dart';
-import '../../core/routes/app_router.dart';
+import '../../core/data/quiz_data.dart';
+import '../../core/providers/quiz_provider.dart';
 import '../../core/providers/user_provider.dart';
+import '../../core/routes/app_router.dart';
+import '../../core/utils/responsive.dart';
+import '../../widgets/category_card.dart';
+import '../../widgets/name_dialog.dart';
+import '../../widgets/user_avatar.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  Future<void> _startQuiz(BuildContext context, String category) async {
+    final quiz = context.read<QuizProvider>();
+    final user = context.read<UserProvider>();
+    if (quiz.canResume(category)) {
+      context.push(AppRoutes.quiz);
+      return;
+    }
+
+    final name = await showNameDialog(context, initialName: user.name);
+    if (name == null || !context.mounted) return;
+
+    user.updateName(name);
+    quiz.startQuiz(category);
+    context.push(AppRoutes.quiz);
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textTheme = Theme.of(context).textTheme;
-    final userProvider = Provider.of<UserProvider>(context);
+    final r = Responsive.of(context);
+    final user = context.watch<UserProvider>();
+    final quiz = context.watch<QuizProvider>();
+
+    final titleColor = isDark ? AppColors.champagne : AppColors.lightNavyBlue;
 
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 24.0),
+          padding: r.symmetric(horizontal: 24, vertical: 24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -32,106 +55,86 @@ class HomeScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Halo, ${userProvider.name}! 👋',
-                          style: textTheme.headlineMedium?.copyWith(
+                          'Halo, ${user.displayName}! 👋',
+                          style: TextStyle(
+                            fontSize: r.font(24),
                             fontWeight: FontWeight.w800,
-                            color: isDark
-                                ? AppColors.champagne
-                                : AppColors.lightNavyBlue,
+                            color: titleColor,
                           ),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: r.s(4)),
                         Text(
                           'Siap memecahkan rekor hari ini?',
-                          style: textTheme.bodyMedium?.copyWith(
+                          style: TextStyle(
+                            fontSize: r.font(14),
                             color: isDark
-                                ? AppColors.champagne.withOpacity(0.8)
+                                ? AppColors.champagne.withValues(alpha: 0.8)
                                 : AppColors.blazeOrange,
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: isDark
-                            ? AppColors.champagne
-                            : AppColors.lightNavyBlue.withOpacity(0.3),
-                        width: 2.0,
-                      ),
-                    ),
-                    child: CircleAvatar(
-                      radius: 25,
-                      backgroundColor: isDark
-                          ? AppColors.champagne.withOpacity(0.2)
-                          : Colors.white.withOpacity(0.5),
-                      backgroundImage: userProvider.profileImagePath != null
-                          ? FileImage(File(userProvider.profileImagePath!))
-                          : null,
-                      child: userProvider.profileImagePath == null
-                          ? const Icon(
-                              Icons.person_rounded,
-                              color: AppColors.coffeeBean,
-                              size: 30,
-                            )
-                          : null,
-                    ),
+                  SizedBox(width: r.s(12)),
+                  UserAvatar(
+                    imagePath: user.profileImagePath,
+                    radius: 25,
+                    ringColor: isDark
+                        ? AppColors.champagne
+                        : AppColors.lightNavyBlue.withValues(alpha: 0.3),
                   ),
                 ],
               ),
-              const SizedBox(height: 32),
-
+              SizedBox(height: r.s(32)),
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(24),
+                padding: r.all(24),
                 decoration: BoxDecoration(
                   color: AppColors.blazeOrange,
-                  borderRadius: BorderRadius.circular(24),
+                  borderRadius: BorderRadius.circular(r.s(24)),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.blazeOrange.withOpacity(0.3),
-                      blurRadius: 16,
-                      offset: const Offset(0, 8),
+                      color: AppColors.blazeOrange.withValues(alpha: 0.3),
+                      blurRadius: r.s(16),
+                      offset: Offset(0, r.s(8)),
                     ),
                   ],
                 ),
                 child: Row(
                   children: [
                     Container(
-                      padding: const EdgeInsets.all(12),
+                      padding: r.all(12),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(16),
+                        color: Colors.white.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(r.s(16)),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.emoji_events_rounded,
                         color: AppColors.champagne,
-                        size: 36,
+                        size: r.s(36),
                       ),
                     ),
-                    const SizedBox(width: 20),
+                    SizedBox(width: r.s(20)),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             'Total Skor',
-                            style: textTheme.titleMedium?.copyWith(
-                              color: AppColors.champagne.withOpacity(0.9),
+                            style: TextStyle(
+                              fontSize: r.font(16),
                               fontWeight: FontWeight.w600,
+                              color: AppColors.champagne.withValues(alpha: 0.9),
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          SizedBox(height: r.s(4)),
                           Text(
-                            '${userProvider.totalScore}',
-                            style: textTheme.displayLarge?.copyWith(
-                              color: AppColors.champagne,
-                              fontSize: 40,
-                              fontWeight: FontWeight.w900,
+                            '${user.totalScore}',
+                            style: TextStyle(
+                              fontSize: r.font(40),
+                              fontWeight: FontWeight.w800,
                               height: 1.1,
+                              color: AppColors.champagne,
                             ),
                           ),
                         ],
@@ -140,102 +143,29 @@ class HomeScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 40),
-
+              SizedBox(height: r.s(40)),
               Text(
                 'Pilih Tantangan',
-                style: textTheme.titleLarge?.copyWith(
+                style: TextStyle(
+                  fontSize: r.font(22),
                   fontWeight: FontWeight.bold,
-                  color: isDark ? AppColors.champagne : AppColors.lightNavyBlue,
+                  color: titleColor,
                 ),
               ),
-              const SizedBox(height: 20),
-
-              _buildQuizTile(
-                context: context,
-                title: 'Pengetahuan Umum',
-                icon: Icons.public_rounded,
-                isDark: isDark,
-              ),
-              const SizedBox(height: 16),
-              _buildQuizTile(
-                context: context,
-                title: 'Logika & Analisis',
-                icon: Icons.extension_rounded,
-                isDark: isDark,
-              ),
-              const SizedBox(height: 16),
-              _buildQuizTile(
-                context: context,
-                title: 'Tebak Pola',
-                icon: Icons.radar_rounded,
-                isDark: isDark,
-              ),
-              const SizedBox(height: 100),
+              SizedBox(height: r.s(20)),
+              for (final category in QuizData.categories) ...[
+                CategoryCard(
+                  title: category.name,
+                  icon: category.icon,
+                  subtitle: quiz.canResume(category.name)
+                      ? 'Lanjutkan kuis'
+                      : null,
+                  onTap: () => _startQuiz(context, category.name),
+                ),
+                SizedBox(height: r.s(16)),
+              ],
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildQuizTile({
-    required BuildContext context,
-    required String title,
-    required IconData icon,
-    required bool isDark,
-  }) {
-    return InkWell(
-      onTap: () {
-        context.push(AppRoutes.quiz, extra: title);
-      },
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        decoration: BoxDecoration(
-          color: isDark
-              ? Colors.white.withOpacity(0.05)
-              : Colors.white.withOpacity(0.5),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: isDark ? Colors.transparent : Colors.white,
-            width: 1.5,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.coffeeBean.withOpacity(0.03),
-              blurRadius: 15,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.blazeOrange.withOpacity(0.15),
-                shape: BoxShape.circle,
-              ),
-              child: Icon(icon, color: AppColors.blazeOrange, size: 28),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Text(
-                title,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? AppColors.champagne : AppColors.coffeeBean,
-                ),
-              ),
-            ),
-            const Icon(
-              Icons.play_arrow_rounded,
-              color: AppColors.lightNavyBlue,
-              size: 28,
-            ),
-          ],
         ),
       ),
     );

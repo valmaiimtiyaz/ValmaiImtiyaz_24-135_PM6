@@ -3,308 +3,162 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/constants/app_colors.dart';
-import '../../core/data/quiz_data.dart';
-import '../../core/routes/app_router.dart';
+import '../../core/providers/quiz_provider.dart';
 import '../../core/providers/user_provider.dart';
+import '../../core/routes/app_router.dart';
+import '../../core/utils/responsive.dart';
+import '../../widgets/custom_button.dart';
+import '../../widgets/option_tile.dart';
+import '../../widgets/question_card.dart';
 
-class QuizScreen extends StatefulWidget {
-  final String category;
+class QuizScreen extends StatelessWidget {
+  const QuizScreen({super.key});
 
-  const QuizScreen({super.key, required this.category});
+  static const List<String> _optionLetters = ['A', 'B', 'C', 'D'];
 
-  @override
-  State<QuizScreen> createState() => _QuizScreenState();
-}
-
-class _QuizScreenState extends State<QuizScreen> {
-  int currentQuestionIndex = 0;
-  Map<int, int> userAnswers = {};
-  List<Map<String, dynamic>> questions = [];
-
-  @override
-  void initState() {
-    super.initState();
-    questions =
-        QuizData.categories[widget.category] ??
-        QuizData.categories['Pengetahuan Umum']!;
-  }
-
-  void _nextQuestion() {
-    if (currentQuestionIndex < questions.length - 1) {
-      setState(() {
-        currentQuestionIndex++;
-      });
+  void _leave(BuildContext context) {
+    if (context.canPop()) {
+      context.pop();
     } else {
-      int finalScore = 0;
-      for (int i = 0; i < questions.length; i++) {
-        if (userAnswers[i] == questions[i]['correctIndex']) {
-          finalScore += 20;
-        }
-      }
-
-      Provider.of<UserProvider>(context, listen: false).addScore(finalScore);
-
-      context.pushReplacement(
-        AppRoutes.result,
-        extra: {
-          'category': widget.category,
-          'score': finalScore,
-          'userAnswers': userAnswers,
-          'questions': questions,
-        },
-      );
+      context.go(AppRoutes.home);
     }
   }
 
-  void _previousQuestion() {
-    if (currentQuestionIndex > 0) {
-      setState(() {
-        currentQuestionIndex--;
-      });
-    }
+  void _finish(BuildContext context) {
+    final quiz = context.read<QuizProvider>();
+    if (quiz.isFinished) return;
+
+    final user = context.read<UserProvider>();
+    final result = quiz.finish(user.displayName);
+    user.recordResult(result.category, result.score);
+    context.pushReplacement(AppRoutes.result);
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textTheme = Theme.of(context).textTheme;
+    final quiz = context.watch<QuizProvider>();
 
-    final currentQuestionData = questions[currentQuestionIndex];
-    final totalQuestions = questions.length;
-    final List<String> optionLetters = ['A', 'B', 'C', 'D'];
+    if (quiz.category == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (context.mounted) context.go(AppRoutes.home);
+      });
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final r = Responsive.of(context);
+    final mainColor = isDark ? AppColors.champagne : AppColors.lightNavyBlue;
+    final question = quiz.currentQuestion;
+
+    final options = Column(
+      children: [
+        for (var i = 0; i < question.options.length; i++)
+          OptionTile(
+            letter: _optionLetters[i],
+            text: question.options[i],
+            isSelected: quiz.selectedAnswer == i,
+            onTap: () => quiz.selectAnswer(i),
+          ),
+      ],
+    );
 
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: r.all(24),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  InkWell(
-                    onTap: () => context.pop(),
-                    child: Icon(
+                  IconButton(
+                    onPressed: () => _leave(context),
+                    icon: Icon(
                       Icons.arrow_back_ios_new_rounded,
-                      color: isDark
-                          ? AppColors.champagne
-                          : AppColors.lightNavyBlue,
+                      color: mainColor,
+                      size: r.s(24),
                     ),
                   ),
                   Text(
-                    '${currentQuestionIndex + 1} / $totalQuestions',
-                    style: textTheme.titleLarge?.copyWith(
+                    '${quiz.currentIndex + 1} / ${quiz.totalQuestions}',
+                    style: TextStyle(
+                      fontSize: r.font(20),
                       fontWeight: FontWeight.bold,
-                      color: isDark
-                          ? AppColors.champagne
-                          : AppColors.lightNavyBlue,
+                      color: mainColor,
                     ),
                   ),
-                  const SizedBox(width: 24),
+                  SizedBox(width: r.s(48)),
                 ],
               ),
-              const SizedBox(height: 16),
-
+              SizedBox(height: r.s(12)),
               ClipRRect(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(r.s(10)),
                 child: LinearProgressIndicator(
-                  value: (currentQuestionIndex + 1) / totalQuestions,
-                  minHeight: 6,
-                  backgroundColor: isDark
-                      ? AppColors.lightNavyBlue.withOpacity(0.3)
-                      : AppColors.lightNavyBlue.withOpacity(0.4),
+                  value: quiz.progress,
+                  minHeight: r.s(6),
+                  backgroundColor: AppColors.lightNavyBlue.withValues(
+                    alpha: isDark ? 0.3 : 0.4,
+                  ),
                   valueColor: const AlwaysStoppedAnimation<Color>(
                     AppColors.blazeOrange,
                   ),
                 ),
               ),
-              const SizedBox(height: 32),
-
+              SizedBox(height: r.s(20)),
               Expanded(
-                flex: 3,
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? AppColors.champagne.withOpacity(0.1)
-                        : Colors.white.withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: isDark
-                          ? Colors.transparent
-                          : AppColors.coffeeBean.withOpacity(0.05),
-                    ),
-                  ),
-                  child: Center(
-                    child: SingleChildScrollView(
-                      child: Text(
-                        currentQuestionData['question'],
-                        textAlign: TextAlign.center,
-                        style: textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: isDark
-                              ? AppColors.champagne
-                              : AppColors.coffeeBean,
-                          height: 1.5,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 32),
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final sideBySide =
+                        constraints.maxWidth > constraints.maxHeight * 1.2;
 
-              Expanded(
-                flex: 5,
-                child: ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 4,
-                  itemBuilder: (context, index) {
-                    final isSelected =
-                        userAnswers[currentQuestionIndex] == index;
-                    final optionText = currentQuestionData['options'][index];
-                    final letter = optionLetters[index];
-
-                    return GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          userAnswers[currentQuestionIndex] = index;
-                        });
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 16),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 16,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? AppColors.blazeOrange.withOpacity(0.15)
-                              : (isDark
-                                    ? Colors.white.withOpacity(0.05)
-                                    : Colors.white.withOpacity(0.5)),
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: isSelected
-                                ? AppColors.blazeOrange
-                                : Colors.transparent,
-                            width: 2,
+                    if (sideBySide) {
+                      return Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: QuestionCard(text: question.text),
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 36,
-                              height: 36,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: isSelected
-                                    ? AppColors.blazeOrange
-                                    : (isDark
-                                          ? Colors.white.withOpacity(0.1)
-                                          : AppColors.blazeOrange.withOpacity(
-                                              0.15,
-                                            )),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  letter,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                    color: isSelected
-                                        ? Colors.white
-                                        : (isDark
-                                              ? AppColors.champagne
-                                              : AppColors.blazeOrange),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Expanded(
-                              child: Text(
-                                optionText,
-                                style: textTheme.titleMedium?.copyWith(
-                                  fontWeight: isSelected
-                                      ? FontWeight.bold
-                                      : FontWeight.w500,
-                                  color: isDark
-                                      ? AppColors.champagne
-                                      : AppColors.coffeeBean,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          SizedBox(width: r.s(16)),
+                          Expanded(
+                            child: SingleChildScrollView(child: options),
+                          ),
+                        ],
+                      );
+                    }
+
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          QuestionCard(text: question.text),
+                          SizedBox(height: r.s(20)),
+                          options,
+                        ],
                       ),
                     );
                   },
                 ),
               ),
-
+              SizedBox(height: r.s(12)),
               Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton(
-                      onPressed: currentQuestionIndex > 0
-                          ? _previousQuestion
-                          : null,
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        side: BorderSide(
-                          color: currentQuestionIndex > 0
-                              ? (isDark
-                                    ? AppColors.champagne.withOpacity(0.5)
-                                    : AppColors.coffeeBean.withOpacity(0.2))
-                              : Colors.transparent,
-                          width: 2,
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      child: Text(
-                        'Sebelumnya',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: currentQuestionIndex > 0
-                              ? (isDark
-                                    ? AppColors.champagne
-                                    : AppColors.coffeeBean)
-                              : Colors.grey,
-                        ),
-                      ),
+                    child: CustomButton(
+                      text: 'Sebelumnya',
+                      variant: ButtonVariant.outlined,
+                      onPressed: quiz.isFirstQuestion ? null : quiz.previous,
                     ),
                   ),
-                  const SizedBox(width: 16),
+                  SizedBox(width: r.s(16)),
                   Expanded(
-                    child: ElevatedButton(
-                      onPressed: userAnswers.containsKey(currentQuestionIndex)
-                          ? _nextQuestion
-                          : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.blazeOrange,
-                        disabledBackgroundColor: AppColors.blazeOrange
-                            .withOpacity(0.3),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                      child: Text(
-                        currentQuestionIndex == questions.length - 1
-                            ? 'Selesai'
-                            : 'Selanjutnya',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
+                    child: CustomButton(
+                      text: quiz.isLastQuestion ? 'Selesai' : 'Selanjutnya',
+                      onPressed: quiz.selectedAnswer == null
+                          ? null
+                          : (quiz.isLastQuestion
+                                ? () => _finish(context)
+                                : quiz.next),
                     ),
                   ),
                 ],
