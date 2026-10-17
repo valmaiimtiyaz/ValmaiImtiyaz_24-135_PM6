@@ -27,8 +27,8 @@ class BottomNavigationShell extends StatelessWidget {
           border: Border(
             top: BorderSide(
               color: isDark
-                  ? AppColors.champagne.withOpacity(0.2)
-                  : AppColors.lightNavyBlue.withOpacity(0.2),
+                  ? AppColors.champagne.withValues(alpha: 0.2)
+                  : AppColors.lightNavyBlue.withValues(alpha: 0.2),
               width: 1.0,
             ),
           ),
@@ -38,7 +38,7 @@ class BottomNavigationShell extends StatelessWidget {
           selectedIndex: navigationShell.currentIndex,
           onDestinationSelected: (index) => _onTap(context, index),
           backgroundColor: isDark ? AppColors.coffeeBean : AppColors.champagne,
-          indicatorColor: AppColors.blazeOrange.withOpacity(0.2),
+          indicatorColor: AppColors.blazeOrange.withValues(alpha: 0.2),
           destinations: [
             NavigationDestination(
               icon: Icon(
